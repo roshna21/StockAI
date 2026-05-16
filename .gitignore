@@ -12,3 +12,6 @@ ml/models_registry/
 
 .idea/
 .vscode/
+
+data/raw/
+test_write.txt

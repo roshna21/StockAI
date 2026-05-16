@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+
+ml/models_registry/
+*.h5
+*.joblib
+
+.DS_Store
+
+.idea/
+.vscode/

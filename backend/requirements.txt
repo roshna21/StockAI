@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pandas
+numpy
+yfinance
+scikit-learn
+tensorflow
+joblib
+transformers
+torch
+python-multipart
+tf-keras

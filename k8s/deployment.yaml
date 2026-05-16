@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stockai-backend
+  labels:
+    app: stockai-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stockai-backend
+  template:
+    metadata:
+      labels:
+        app: stockai-backend
+    spec:
+      containers:
+      - name: backend
+        image: stockai-backend:latest
+        ports:
+        - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stockai-backend-service
+spec:
+  selector:
+    app: stockai-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stockai-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stockai-dashboard
+  template:
+    metadata:
+      labels:
+        app: stockai-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: stockai-dashboard:latest
+        ports:
+        - containerPort: 8501
+        env:
+        - name: API_URL
+          value: "http://stockai-backend-service:80"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stockai-dashboard-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: stockai-dashboard
+  ports:
+    - protocol: TCP
+      port: 8501
+      targetPort: 8501
